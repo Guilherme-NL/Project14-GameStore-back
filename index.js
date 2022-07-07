@@ -111,7 +111,7 @@ server.delete("/session", async(req,res) =>{
   }
 
 
-  await db.collection('sessions').deleteMany({ _id: session._id });
+  await db.collection('sessions').deleteMany({ userId: session.userId });
   res.status(201).send('Session ended successfully');
 });
 
