@@ -5,6 +5,6 @@ import { Router } from 'express';
 const router = Router();
 
 router.post('/history', validateUser, postToHistory);
-router.get('/history/:userId',validateUser, listHistory);
+router.get('/history/',validateUser, listHistory);
 
 export default router;

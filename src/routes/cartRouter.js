@@ -5,6 +5,6 @@ import { Router } from 'express';
 const router = Router();
 
 router.post('/cart', validateUser, addToCart);
-router.get('/prdoucts/:productId',validateUser, getCart);
+router.get('/cart/',validateUser, getCart);
 
 export default router;

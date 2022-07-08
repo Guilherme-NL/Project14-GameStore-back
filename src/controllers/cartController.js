@@ -6,6 +6,6 @@ export async function addToCart(req,res){
 }
 
 export async function getCart(req,res){
-    //aqui vai o get/cart/:userId
+    //aqui vai o get/cart/
     res.sendStatus(503);
 }
