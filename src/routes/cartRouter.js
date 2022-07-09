@@ -10,6 +10,6 @@ const router = Router();
 
 router.post("/cart", validateUser, addToCart);
 router.get("/cart", validateUser, getCart);
-router.delete("/cart/:id", validateUser, deleteCart);
+router.delete("/cart/:id?", validateUser, deleteCart);
 
 export default router;

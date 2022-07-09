@@ -22,7 +22,7 @@ export async function addToCart(req, res) {
 
   await db.collection("cart").insertOne({
     ...product,
-    platform,
+    platforms: platform,
     userId: new ObjectId(session.userId),
     date: dayjs(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY"),
   });
@@ -52,7 +52,17 @@ export async function getCart(req, res) {
 export async function deleteCart(req, res) {
   const deleteId = req.params.id;
 
-  await db.collection("cart").deleteOne({ _id: ObjectId(deleteId) });
+  const session = res.locals.session;
+
+  if (!deleteId) {
+    await db
+      .collection("cart")
+      .deleteMany({ userId: ObjectId(session.userId) });
+  }
+
+  await db
+    .collection("cart")
+    .deleteOne({ _id: ObjectId(deleteId), userId: ObjectId(session.userId) });
   console.log(deleteId);
 
   res.sendStatus(202);
