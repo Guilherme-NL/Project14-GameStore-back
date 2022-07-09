@@ -8,7 +8,7 @@ export async function addToCart(req,res){
 
     const {productId,platform} = req.body;
 
-    if (!session||!productId||!platform||userId) {
+    if (!session||!productId||!platform) {
         return res.sendStatus(401);
     }
     
