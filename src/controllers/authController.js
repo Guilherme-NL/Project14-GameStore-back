@@ -83,7 +83,7 @@ export async function signUp(req,res){
 }
 
 export async function logOut(req,res){
-    const { authorization } = req.headers;
+  const { authorization } = req.headers;
   const token = authorization?.replace('Bearer ', '');
 
   const session = await db.collection('sessions').findOne({ token });
