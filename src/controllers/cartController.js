@@ -1,25 +1,59 @@
-import { db } from '../dbStrategy/mongo.js';
-import dayjs from 'dayjs';
-import { ObjectId } from 'mongodb';
+import { db } from "../dbStrategy/mongo.js";
+import dayjs from "dayjs";
+import { ObjectId } from "mongodb";
 
-export async function addToCart(req,res){
-    const { authorization } = req.headers;
-    const token = authorization?.replace('Bearer ', '');
+export async function addToCart(req, res) {
+  const { authorization } = req.headers;
+  const token = authorization?.replace("Bearer ", "");
 
-    const session = await db.collection('sessions').findOne({ token });
+  const session = await db.collection("sessions").findOne({ token });
 
-    const {productId,platform} = req.body;
+  const { productId, platform } = req.body;
+  console.log(productId);
 
-    if (!session||!productId||!platform) {
-        return res.sendStatus(401);
-    }
-    
-    await db.collection('carts').insertOne({ productId:new ObjectId(productId), platform, userId: new ObjectId(session.userId), date:dayjs(new Date(),'DD/MM/YYYY').format('DD/MM/YYYY') });
-    res.status(201).send('Entrada criada com sucesso');
+  if (!session || !productId || !platform) {
+    return res.sendStatus(401);
+  }
 
+  const product = await db
+    .collection("products")
+    .findOne({ _id: ObjectId(productId) });
+  console.log(product);
+
+  await db.collection("cart").insertOne({
+    ...product,
+    platform,
+    userId: new ObjectId(session.userId),
+    date: dayjs(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY"),
+  });
+  res.status(201).send("Entrada criada com sucesso");
 }
 
-export async function getCart(req,res){
-    //aqui vai o get/cart/
-    res.sendStatus(503);
+export async function getCart(req, res) {
+  const { authorization } = req.headers;
+  const token = authorization?.replace("Bearer ", "");
+
+  const session = await db.collection("sessions").findOne({ token });
+
+  if (!session) {
+    return res.sendStatus(401);
+  }
+
+  const cart = await db
+    .collection("cart")
+    .find({ userId: ObjectId(session.userId) })
+    .toArray();
+
+  console.log(cart);
+
+  res.send(cart);
+}
+
+export async function deleteCart(req, res) {
+  const deleteId = req.params.id;
+
+  await db.collection("cart").deleteOne({ _id: ObjectId(deleteId) });
+  console.log(deleteId);
+
+  res.sendStatus(202);
 }
