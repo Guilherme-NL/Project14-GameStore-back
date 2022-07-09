@@ -1,12 +1,27 @@
 import { db } from '../dbStrategy/mongo.js';
 
 export async function listProducts(req,res){
+    const searchTerm=req.query.searchTerm;
+    let searchCategory=req.query.searchCategory;
+    let searchOrder=req.query.searchOrder;
+    if(!searchCategory){
+        searchCategory="released";
+    }
+    if(!searchOrder){
+        searchOrder=-1;
+    }
+
+
     const products = await db
     .collection('products')
-    .find().sort({"released":-1})
+    .find().sort({[searchCategory]: [searchOrder]})
     .toArray();
 
-    res.send(products);
+    const result=products.filter((item) => {
+        return Object.values(item).join('').toLowerCase().includes(searchTerm.toLowerCase())
+    })
+
+    res.send(result);
 }
 
 export async function displayProduct(req,res){
