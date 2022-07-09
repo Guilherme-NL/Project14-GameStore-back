@@ -1,4 +1,6 @@
 import { db } from '../dbStrategy/mongo.js';
+import dayjs from 'dayjs';
+import { ObjectId } from 'mongodb';
 
 export async function addToCart(req,res){
     const { authorization } = req.headers;
@@ -12,13 +14,7 @@ export async function addToCart(req,res){
         return res.sendStatus(401);
     }
     
-        
-    if (error) {
-        res.sendStatus(400);
-        return;
-    }
-    
-    await db.collection('carts').insertOne({ productId, platform, userId: session.userId, date:dayjs(new Date(),'DD/MM/YYYY').format('DD/MM/YYYY') });
+    await db.collection('carts').insertOne({ productId:new ObjectId(productId), platform, userId: new ObjectId(session.userId), date:dayjs(new Date(),'DD/MM/YYYY').format('DD/MM/YYYY') });
     res.status(201).send('Entrada criada com sucesso');
 
 }
