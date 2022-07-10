@@ -5,6 +5,6 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/products', listProducts);
-router.get('/prdoucts/:productId', displayProduct);
+router.get('/products/:productId', displayProduct);
 
 export default router;

@@ -1,4 +1,5 @@
 import { db } from '../dbStrategy/mongo.js';
+import { ObjectId } from "mongodb";
 
 export async function listProducts(req,res){
     const searchTerm=req.query.searchTerm;
@@ -32,8 +33,12 @@ export async function listProducts(req,res){
 }
 
 export async function displayProduct(req,res){
-    //aqui vai o get/products/:productId
-    res.sendStatus(503);
+
+    const product = await db
+    .collection('products')
+    .findOne({_id:ObjectId(req.params.productId)});
+
+    res.send(product);
 }
 
 
