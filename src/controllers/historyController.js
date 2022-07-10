@@ -1,20 +1,28 @@
 import { db } from "../dbStrategy/mongo.js";
 import dayjs from "dayjs";
+import { ObjectId } from "mongodb";
 
 export async function postToHistory(req, res) {
   const product = req.body;
-  console.log(product);
+  const session = res.locals.session;
 
-  if (product.length > 1) {
-    await db.collection("history").insertMany(product);
-  } else {
-    await db.collection("history").insertOne(product);
-  }
+  await product.map((e) => {
+    db.collection("history").insertOne({
+      ...e,
+      userId: ObjectId(session.userId),
+    });
+  });
 
   res.sendStatus(202);
 }
 
 export async function listHistory(req, res) {
-  //aqui vai o get/history
-  res.sendStatus(503);
+  const session = res.locals.session;
+
+  const history = await db
+    .collection("history")
+    .find({ userId: ObjectId(session.userId) })
+    .toArray();
+
+  res.send(history);
 }
