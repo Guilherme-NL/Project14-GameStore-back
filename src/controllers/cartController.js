@@ -19,7 +19,9 @@ export async function addToCart(req, res) {
     .findOne({ _id: ObjectId(productId) });
 
   await db.collection("cart").insertOne({
-    ...product,
+    name:product.name,
+    image:product.image,
+    price:product.price,
     platforms: platform,
     userId: ObjectId(session.userId),
     date: dayjs(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY"),

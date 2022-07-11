@@ -15,7 +15,7 @@ export async function signIn(req,res){
   const { error } = userSchema.validate(user);
 
   if (error) {
-    res.status(422).send("Preencha os campos corretamente!");
+    res.send(422).status("Preencha os campos!");
     return;
   }
 
@@ -23,7 +23,7 @@ export async function signIn(req,res){
   const findUser = await db.collection("singup").findOne({ email: user.email });
 
   if (findUser === null) {
-    return res.status(404).send("Usuário inexistente!");
+    return res.send(404).status("Usuário não encontrado!");
   }
 
   //password validation
